@@ -84,6 +84,7 @@
   "The post time in HHmmss format": "Waktu posting dalam format HHmmss",
   "The media type (photo/video/animated_gif)": "Jenis media (foto/video/animated_gif)",
   "The file extension of media (jpg/png/mp4)": "Ekstensi file media (jpg/png/mp4)",
+  "Any property path of the tweet or media object also works, for example:": "Jalur properti apa pun dari objek tweet atau media juga bisa digunakan, contoh:",
   "Failed to export media. Open DevTools for more details.": "Gagal mengekspor media. Buka DevTools untuk detail lebih lanjut.",
   "Failed to copy media URLs. Open DevTools for more details.": "Gagal menyalin URL media. Buka DevTools untuk detail lebih lanjut.",
 

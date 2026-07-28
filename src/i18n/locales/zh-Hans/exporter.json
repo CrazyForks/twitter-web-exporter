@@ -84,6 +84,7 @@
   "The post time in HHmmss format": "发布时间（HHmmss 格式）",
   "The media type (photo/video/animated_gif)": "媒体类型（photo/video/animated_gif）",
   "The file extension of media (jpg/png/mp4)": "媒体文件扩展名（jpg/png/mp4）",
+  "Any property path of the tweet or media object also works, for example:": "也可以使用推文或媒体对象的任意属性路径，例如：",
   "Failed to export media. Open DevTools for more details.": "导出媒体失败。打开 DevTools 以获取更多详细信息。",
   "Failed to copy media URLs. Open DevTools for more details.": "复制媒体 URL 失败。打开 DevTools 以获取更多详细信息。",
 

@@ -84,6 +84,7 @@
   "The post time in HHmmss format": "投稿時刻（HHmmss形式）",
   "The media type (photo/video/animated_gif)": "メディアタイプ（photo/video/animated_gif）",
   "The file extension of media (jpg/png/mp4)": "メディアのファイル拡張子（jpg/png/mp4）",
+  "Any property path of the tweet or media object also works, for example:": "ツイートまたはメディアオブジェクトの任意のプロパティパスも使用できます。例：",
   "Failed to export media. Open DevTools for more details.": "メディアのエクスポートに失敗しました。詳細はDevToolsを開いてください。",
   "Failed to copy media URLs. Open DevTools for more details.": "メディアURLのコピーに失敗しました。詳細はDevToolsを開いてください。",
 
