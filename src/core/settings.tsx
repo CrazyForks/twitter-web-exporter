@@ -212,7 +212,13 @@ export function Settings() {
                     return;
                   }
 
-                  await db.import(file);
+                  try {
+                    await db.import(file);
+                  } catch (error) {
+                    alert(`${t('Failed to import database.')}\n\n${(error as Error).message}`);
+                    return;
+                  }
+
                   alert(t('Database imported. The page will reload now.'));
                   location.reload();
                 }}

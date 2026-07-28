@@ -19,6 +19,7 @@
   "Database cleared.": "Database cleared.",
   "Import will merge data into the existing database. This may produce unpredictable results when records conflict. For a stable restore, cancel now, export a backup, then clear the DB before importing again.\n\nContinue with merge import?": "Import will merge data into the existing database. This may produce unpredictable results when records conflict. For a stable restore, cancel now, export a backup, then clear the DB before importing again.\n\nContinue with merge import?",
   "Database imported. The page will reload now.": "Database imported. The page will reload now.",
+  "Failed to import database.": "Failed to import database.",
   "Module": "Module",
   "Modules (Scroll to see more)": "Modules (Scroll to see more)",
   "About": "About",

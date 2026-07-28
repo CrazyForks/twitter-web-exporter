@@ -217,6 +217,7 @@ export class DatabaseManager {
       await this.db.transaction('rw', this.tweets(), this.users(), (tx) => migration_20250609(tx));
     } catch (error) {
       this.logError(error);
+      throw error;
     }
   }
 
