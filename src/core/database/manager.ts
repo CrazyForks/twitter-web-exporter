@@ -206,10 +206,18 @@ export class DatabaseManager {
 
   async import(data: Blob) {
     logger.info('Importing database...');
-    return importInto(this.db, data, {
-      acceptVersionDiff: true,
-      overwriteValues: true,
-    }).catch(this.logError);
+
+    try {
+      await importInto(this.db, data, {
+        acceptVersionDiff: true,
+        overwriteValues: true,
+      });
+
+      // Run migrations for legacy user format in case the imported data contains old user records.
+      await this.db.transaction('rw', this.tweets(), this.users(), (tx) => migration_20250609(tx));
+    } catch (error) {
+      this.logError(error);
+    }
   }
 
   async clear() {
