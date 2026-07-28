@@ -6,7 +6,20 @@ import {
   parseTwitterDateTime,
   strEntitiesToHTML,
 } from '@/utils/common';
-import { getProfileImageOriginalUrl, getUserURL } from '@/utils/api';
+import {
+  extractUserDescription,
+  extractUserDescriptionEntities,
+  extractUserFavouritesCount,
+  extractUserFollowersCount,
+  extractUserFollowingCount,
+  extractUserListedCount,
+  extractUserProfileBanner,
+  extractUserStatusesCount,
+  extractUserWebsite,
+  extractUserWebsiteEntities,
+  getProfileImageOriginalUrl,
+  getUserURL,
+} from '@/utils/api';
 import { options } from '@/core/options';
 import { Trans } from '@/i18n';
 import { User } from '@/types';
@@ -61,7 +74,8 @@ export const columns = [
     header: () => <Trans i18nKey="Profile Name" />,
     cell: (info) => <p class="w-32">{info.getValue()}</p>,
   }),
-  columnHelper.accessor('legacy.description', {
+  columnHelper.accessor(extractUserDescription, {
+    id: 'description',
     meta: { exportKey: 'description', exportHeader: 'Description' },
     header: () => <Trans i18nKey="Description" />,
     cell: (info) => (
@@ -69,8 +83,8 @@ export const columns = [
         class="w-52 break-words"
         dangerouslySetInnerHTML={{
           __html: strEntitiesToHTML(
-            info.row.original.legacy?.description || 'N/A',
-            info.row.original.legacy?.entities?.description?.urls ?? [],
+            extractUserDescription(info.row.original) || 'N/A',
+            extractUserDescriptionEntities(info.row.original),
           ),
         }}
       />
@@ -90,7 +104,8 @@ export const columns = [
       </div>
     ),
   }),
-  columnHelper.accessor('legacy.profile_banner_url', {
+  columnHelper.accessor(extractUserProfileBanner, {
+    id: 'profile_banner_url',
     meta: { exportKey: 'profile_banner_url', exportHeader: 'Profile Banner' },
     header: () => <Trans i18nKey="Profile Banner" />,
     cell: (info) => (
@@ -106,27 +121,32 @@ export const columns = [
       </div>
     ),
   }),
-  columnHelper.accessor('legacy.followers_count', {
+  columnHelper.accessor(extractUserFollowersCount, {
+    id: 'followers_count',
     meta: { exportKey: 'followers_count', exportHeader: 'Followers' },
     header: () => <Trans i18nKey="Followers" />,
     cell: (info) => <p>{info.getValue() ?? 'N/A'}</p>,
   }),
-  columnHelper.accessor('legacy.friends_count', {
+  columnHelper.accessor(extractUserFollowingCount, {
+    id: 'friends_count',
     meta: { exportKey: 'friends_count', exportHeader: 'FollowingCount' },
     header: () => <Trans i18nKey="FollowingCount" />,
     cell: (info) => <p>{info.getValue() ?? 'N/A'}</p>,
   }),
-  columnHelper.accessor('legacy.statuses_count', {
+  columnHelper.accessor(extractUserStatusesCount, {
+    id: 'statuses_count',
     meta: { exportKey: 'statuses_count', exportHeader: 'Statuses' },
     header: () => <Trans i18nKey="Statuses" />,
     cell: (info) => <p>{info.getValue() ?? 'N/A'}</p>,
   }),
-  columnHelper.accessor('legacy.favourites_count', {
+  columnHelper.accessor(extractUserFavouritesCount, {
+    id: 'favourites_count',
     meta: { exportKey: 'favourites_count', exportHeader: 'Favourites' },
     header: () => <Trans i18nKey="Favourites" />,
     cell: (info) => <p>{info.getValue() ?? 'N/A'}</p>,
   }),
-  columnHelper.accessor('legacy.listed_count', {
+  columnHelper.accessor(extractUserListedCount, {
+    id: 'listed_count',
     meta: { exportKey: 'listed_count', exportHeader: 'Listed' },
     header: () => <Trans i18nKey="Listed" />,
     cell: (info) => <p>{info.getValue() ?? 'N/A'}</p>,
@@ -136,15 +156,16 @@ export const columns = [
     header: () => <Trans i18nKey="Location" />,
     cell: (info) => <p>{info.getValue() ?? 'N/A'}</p>,
   }),
-  columnHelper.accessor('legacy.url', {
+  columnHelper.accessor(extractUserWebsite, {
+    id: 'website',
     meta: { exportKey: 'website', exportHeader: 'Website' },
     header: () => <Trans i18nKey="Website" />,
     cell: (info) => (
       <p
         dangerouslySetInnerHTML={{
           __html: strEntitiesToHTML(
-            info.row.original.legacy?.url || 'N/A',
-            info.row.original.legacy?.entities?.url?.urls ?? [],
+            extractUserWebsite(info.row.original) || 'N/A',
+            extractUserWebsiteEntities(info.row.original),
           ),
         }}
       />

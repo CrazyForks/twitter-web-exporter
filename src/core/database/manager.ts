@@ -3,7 +3,7 @@ import Dexie, { KeyPaths } from 'dexie';
 import { exportDB, importInto } from 'dexie-export-import';
 
 import packageJson from '@/../package.json';
-import { Capture, Tweet, User, WithSortIndex } from '@/types';
+import { Capture, Tweet, User, UserLegacy, WithSortIndex } from '@/types';
 import { compareSortIndex, extractTweetMedia } from '@/utils/api';
 import { parseTwitterDateTime } from '@/utils/common';
 import { migration_20250609 } from '@/utils/migration';
@@ -83,7 +83,7 @@ export class DatabaseManager {
     const tweets = await this.tweets()
       .where('rest_id')
       .anyOf(tweetIds)
-      .filter((t) => this.filterEmptyData(t))
+      .filter((t) => this.filterEmptyTweet(t))
       .toArray()
       .catch(this.logError);
     if (!tweets) {
@@ -105,7 +105,7 @@ export class DatabaseManager {
     const users = await this.users()
       .where('rest_id')
       .anyOf(userIds)
-      .filter((u) => this.filterEmptyData(u))
+      .filter((u) => this.filterEmptyUser(u))
       .toArray()
       .catch(this.logError);
     if (!users) {
@@ -316,9 +316,17 @@ export class DatabaseManager {
     return this.captures().clear().catch(this.logError);
   }
 
-  private filterEmptyData(data: Tweet | User) {
+  private filterEmptyTweet(data: Tweet) {
     if (!data?.legacy) {
-      logger.warn('Empty data found in DB', data);
+      logger.warn('Empty tweet found in DB', data);
+      return false;
+    }
+    return true;
+  }
+
+  private filterEmptyUser(data: User) {
+    if (!data?.core && !data?.legacy) {
+      logger.warn('Empty user found in DB', data);
       return false;
     }
     return true;
@@ -350,7 +358,7 @@ export class DatabaseManager {
     ];
 
     // Indexes for the "users" table.
-    const userIndexPaths: KeyPaths<User>[] = [
+    const userIndexPaths: KeyPaths<UserLegacy>[] = [
       'rest_id',
       'twe_private_fields.created_at',
       'twe_private_fields.updated_at',

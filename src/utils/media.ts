@@ -1,6 +1,7 @@
 import { Media, Tweet, User } from '@/types';
 import {
   extractTweetMedia,
+  extractUserProfileBanner,
   getFileExtensionFromUrl,
   getMediaIndex,
   getMediaOriginalUrl,
@@ -112,13 +113,14 @@ export function extractMedia(
         });
       }
 
-      if (item.legacy?.profile_banner_url) {
-        const ext = getFileExtensionFromUrl(item.legacy.profile_banner_url);
+      const bannerUrl = extractUserProfileBanner(item);
+      if (bannerUrl) {
+        const ext = getFileExtensionFromUrl(bannerUrl);
         const filename = `${item.core?.screen_name}_profile_banner.${ext}`;
         gallery.set(filename, {
           filename,
           type: 'photo',
-          url: item.legacy.profile_banner_url,
+          url: bannerUrl,
         });
       }
     }
