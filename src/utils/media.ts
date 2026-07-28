@@ -58,6 +58,8 @@ export const DEFAULT_MEDIA_TYPES = ['photo', 'video', 'animated_gif'] as const;
 
 export const MAX_FILENAME_SEGMENT = 240;
 
+const textEncoder = new TextEncoder();
+
 /**
  * Extract media from tweets and users.
  */
@@ -138,17 +140,44 @@ function property(obj: unknown, path: string): unknown {
   }, obj);
 }
 
+function byteLength(str: string): number {
+  return textEncoder.encode(str).length;
+}
+
+/**
+ * Truncate a string so that its UTF-8 representation fits within the given byte budget.
+ */
+function truncateToBytes(str: string, maxBytes: number): string {
+  if (byteLength(str) <= maxBytes) {
+    return str;
+  }
+
+  let result = '';
+  let bytes = 0;
+
+  for (const char of str) {
+    const size = byteLength(char);
+    if (bytes + size > maxBytes) {
+      break;
+    }
+    result += char;
+    bytes += size;
+  }
+
+  return result;
+}
+
 function toFilenameSafe(value: unknown): string {
   if (value === null || value === undefined) {
     return '';
   }
   const str = typeof value === 'object' ? JSON.stringify(value) : String(value);
-  return (
+  return truncateToBytes(
     str
       // eslint-disable-next-line no-control-regex
       .replace(/[<>:"/\\|?*\x00-\x1F]/g, '_')
-      .replace(/^[. ]+|[. ]+$/g, '_')
-      .slice(0, MAX_FILENAME_SEGMENT) || ''
+      .replace(/^[. ]+|[. ]+$/g, '_'),
+    MAX_FILENAME_SEGMENT,
   );
 }
 
@@ -156,17 +185,19 @@ function truncateFilename(filename: string): string {
   return filename
     .split('/')
     .map((segment, idx, arr) => {
-      if (segment.length <= MAX_FILENAME_SEGMENT) {
+      if (byteLength(segment) <= MAX_FILENAME_SEGMENT) {
         return segment;
       }
       if (idx === arr.length - 1) {
         const dot = segment.lastIndexOf('.');
         if (dot > 0 && segment.length - dot <= 10) {
           const ext = segment.slice(dot);
-          return segment.slice(0, MAX_FILENAME_SEGMENT - ext.length) + ext;
+          return (
+            truncateToBytes(segment.slice(0, dot), MAX_FILENAME_SEGMENT - byteLength(ext)) + ext
+          );
         }
       }
-      return segment.slice(0, MAX_FILENAME_SEGMENT);
+      return truncateToBytes(segment, MAX_FILENAME_SEGMENT);
     })
     .join('/');
 }
